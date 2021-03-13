@@ -94,9 +94,6 @@ class LinkDecoder {
     List<String> cash = List.from(a), tCash = List.from(a);
     a = a.sublist(b, c);
 
-    List<String> dD = [];
-    dD = List.from(d.split(''));
-
     tCash = cash.sublist(0, b);
     tCash.add(d);
     tCash.addAll(cash.sublist(c));

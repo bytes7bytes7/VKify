@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_vkify/scr/app/services/auth_service.dart';
+import 'package:flutter_vkify/scr/app/services/music_provider.dart';
 import '../home/home_view.dart';
 
 class LoginView extends StatefulWidget {
@@ -21,6 +22,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   void initState() {
     super.initState();
+    VKClient.initCookie();
     loading = false;
     error = '';
     phone = '';
@@ -63,9 +65,7 @@ class _LoginViewState extends State<LoginView> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Spacer(
-
-                      ),
+                      Spacer(),
                       SizedBox(
                         height: 110,
                         width: 150,
@@ -121,14 +121,14 @@ class _LoginViewState extends State<LoginView> {
                         height: 40.0,
                         child: (error != '')
                             ? Container(
-                          alignment: Alignment.bottomCenter,
-                          padding:
-                          const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            error,
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        )
+                                alignment: Alignment.bottomCenter,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10.0),
+                                child: Text(
+                                  error,
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              )
                             : SizedBox.shrink(),
                       ),
                       SizedBox(
@@ -144,13 +144,14 @@ class _LoginViewState extends State<LoginView> {
                           child: Text(
                             'Login',
                             style:
-                            TextStyle(color: Colors.white, fontSize: 20.0),
+                                TextStyle(color: Colors.white, fontSize: 20.0),
                           ),
                           onPressed: () async {
+                            print('loading: $loading');
                             if (phone != '' && password != '' && !loading) {
                               error = '';
                               loading = true;
-                              dio = await login(phone, password);
+                              dio = await VKClient.login(phone, password);
                               loading = false;
                               if (dio != null) {
                                 Navigator.pushReplacement(
@@ -162,14 +163,57 @@ class _LoginViewState extends State<LoginView> {
                               } else {
                                 setState(() {
                                   error = 'Не удалось войти!';
+                                  loading=false;
                                 });
                               }
                             } else {
                               setState(() {
                                 error = 'Заполните все поля!';
+                                loading=false;
                               });
                             }
                           },
+                        ),
+                      ),SizedBox(height: 20.0),
+                      SizedBox(
+                        height: 45.0,
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Color(0xFF479CFF),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                          child: Text(
+                            'Fetch',
+                            style:
+                            TextStyle(color: Colors.white, fontSize: 20.0),
+                          ),
+                          onPressed: () async {
+                            print(MusicProvider.fetchMusic());
+                          }
+                        ),
+                      ),
+                      SizedBox(height: 20.0),
+                      SizedBox(
+                        height: 45.0,
+                        width: double.infinity,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Color(0xFF479CFF),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                            ),
+                            child: Text(
+                              'Delete',
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 20.0),
+                            ),
+                            onPressed: () async {
+                              VKClient.cookieJar.deleteAll();
+                            }
                         ),
                       ),
                       SizedBox(height: 20.0),
