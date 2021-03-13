@@ -12,7 +12,7 @@ Future<Dio> login(String phone, String password) async {
   Map<String, String> headers = HashMap();
   headers.addAll({
     'User-Agent':
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
+         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Accept-Language': 'ru-ru,ru;q=0.8,en-us;q=0.5,en;q=0.3',
     'Accept-Encoding': 'gzip, deflate',
