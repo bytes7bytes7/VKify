@@ -78,6 +78,31 @@ class _HomeViewState extends State<HomeView> {
             'Популярные Плейлисты',
             style: Theme.of(context).textTheme.headline2,
           ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Theme.of(context).primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+            ),
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 55.0,
+                vertical: 15.0,
+              ),
+              child: Text(
+                'Выйти',
+                style: Theme.of(context).textTheme.button,
+              ),
+            ),
+            onPressed: () async {
+              VKClient.cookieJar.deleteAll();
+              Navigator.pushReplacement(
+                context,
+                NextPageRoute(nextPage: LoginView()),
+              );
+            },
+          ),
         ],
       ),
     );
