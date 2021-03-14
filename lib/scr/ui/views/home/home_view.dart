@@ -19,10 +19,6 @@ class _HomeViewState extends State<HomeView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(dio.interceptors.toString()),
-              Text(VKClient.userID.toString()),
-              Text(VKClient.username),
-              Text(VKClient.avatarUrl),
               SizedBox(height: 20.0),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(

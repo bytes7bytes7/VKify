@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vkify/scr/ui/theme/light_theme.dart';
-import 'package:flutter_vkify/scr/ui/views/login/login_view.dart';
+import 'package:flutter_vkify/scr/ui/views/start/start_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'VKify',
       theme: lightThemeData,
-      home: LoginView(),
+      home: StartView(),
     );
   }
 }

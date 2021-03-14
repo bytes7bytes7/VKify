@@ -13,62 +13,69 @@ class VKClient {
   static String username;
   static String avatarUrl;
 
-  static Future<void> initCookie()async{
+  static Future<void> initCookie() async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;
-    cookieJar=PersistCookieJar(dir:appDocPath+"/.cookies/");
+    cookieJar = PersistCookieJar(dir: appDocPath + "/.cookies/");
     dio.interceptors.add(CookieManager(cookieJar));
-
   }
 
-  static void showHeaders()async{
-    print(dio.options.headers);
-  }
-
-  static void showCookieJar()async{
-    String uid = cookieJar.domains[0]['login.vk.com']['/']['l'].toString();
-    uid=uid.substring(uid.indexOf('l=')+2);
-    uid=uid.substring(0,uid.indexOf(';'));
-    VKClient.userID=int.parse(uid);
-  }
-
-  static void loadHeaders()async{
-    Map<String, String> headers = HashMap();
-    headers.addAll({
-      'User-Agent':
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
-      'Accept':
-      'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-      'DNT': '1',
-      'cookie':'remixusid=DELETED; remixflash=0.0.0; remixscreen_width=1920; remixscreen_height=1080; remixscreen_dpr=1; remixscreen_depth=24; remixscreen_orient=1; remixscreen_winzoom=1; remixseenads=0; remixlhk==DELETED; ',
-      'Connection': 'keep-alive',
-      'Accept-Encoding': 'gzip, deflate',
-      'Accept-Language': 'ru-ru,ru;q=0.8,en-us;q=0.5,en;q=0.3',
-    });
-    dio.options.headers=headers;
-    if (cookieJar.domains!=null){
-      String cookies = headers['cookie'];
-      Map<dynamic,dynamic> domains;
-      domains=HashMap.from(cookieJar.domains[0]['vk.com']['/']);
-      for(int i =0;i<domains.keys.length;i++){
-        String key = domains.keys.toList()[i].toString();
-        String value=domains[key].toString();
-        value=value.substring(value.indexOf(key));
-        value=value.substring(0,value.indexOf(';'));
-        if (key=='remixuas' || key=='remixtmr_login')
-          continue;
-        else if(key=='remixsid') {
-          print('DHEHDEH');
-          value = key+'==DELETED';
-        }
-        print(key+' : '+value);
-        cookies+=value+'; ';
+  static Future<void> checkCookie() async {
+    await initCookie();
+    if (cookieJar.domains.isNotEmpty) {
+      // Set userID
+      String uid;
+      try {
+        uid = cookieJar.domains[0]['login.vk.com']['/']['l'].toString();
+      } catch (e) {
+        return;
       }
-      cookies=cookies.substring(0,cookies.length-2);
-      dio.options.headers['cookie']=cookies;
+      uid = uid.substring(uid.indexOf('l=') + 2);
+      uid = uid.substring(0, uid.indexOf(';'));
+      VKClient.userID = int.parse(uid);
+
+      //Load header to dio client
+      Map<String, String> headers = HashMap();
+      headers.addAll({
+        'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
+        'Accept':
+            'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'DNT': '1',
+        'cookie':
+            'remixusid=DELETED; remixflash=0.0.0; remixscreen_width=1920; remixscreen_height=1080; remixscreen_dpr=1; remixscreen_depth=24; remixscreen_orient=1; remixscreen_winzoom=1; remixseenads=0; remixlhk==DELETED; ',
+        'Connection': 'keep-alive',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept-Language': 'ru-ru,ru;q=0.8,en-us;q=0.5,en;q=0.3',
+      });
+      dio.options.headers = headers;
+      if (cookieJar.domains != null) {
+        String cookies = headers['cookie'];
+        Map<dynamic, dynamic> domains;
+        domains = HashMap.from(cookieJar.domains[0]['vk.com']['/']);
+        for (int i = 0; i < domains.keys.length; i++) {
+          String key = domains.keys.toList()[i].toString();
+          String value = domains[key].toString();
+          value = value.substring(value.indexOf(key));
+          value = value.substring(0, value.indexOf(';'));
+          if (key == 'remixuas' || key == 'remixtmr_login')
+            continue;
+          else if (key == 'remixsid') {
+            print('DHEHDEH');
+            value = key + '==DELETED';
+          }
+          print(key + ' : ' + value);
+          cookies += value + '; ';
+        }
+        cookies = cookies.substring(0, cookies.length - 2);
+        dio.options.headers['cookie'] = cookies;
+      }
     }
   }
 
+  static void showHeaders() async {
+    print(dio.options.headers);
+  }
 
   static Future<Dio> login(String phone, String password) async {
     await initCookie();
