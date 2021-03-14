@@ -49,226 +49,214 @@ class _LoginViewState extends State<LoginView> {
         onTap: () {
           FocusScope.of(context).requestFocus(FocusNode());
         },
-        child: SafeArea(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                controller: controller,
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: RadialGradient(
-                      center: Alignment.centerLeft,
-                      radius: 1.2,
-                      colors: [
-                        darkGradientColors[2],
-                        Colors.transparent,
-                      ],
-                    ),
-                  ),
-                  width: double.infinity,
-                  height: constraints.maxHeight,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: RadialGradient(
-                        center: Alignment.bottomLeft,
-                        radius: 1.2,
-                        colors: [
-                          darkGradientColors[1],
-                          Colors.transparent,
-                        ],
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: RadialGradient(
+              center: Alignment.centerLeft,
+              radius: 1.2,
+              colors: [
+                darkGradientColors[2],
+                Colors.transparent,
+              ],
+            ),
+          ),
+          width: double.infinity,
+          height: double.infinity,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                center: Alignment.bottomLeft,
+                radius: 1.2,
+                colors: [
+                  darkGradientColors[1],
+                  Colors.transparent,
+                ],
+              ),
+            ),
+            width: double.infinity,
+            height: double.infinity,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment.topLeft,
+                  radius: 1.2,
+                  colors: [
+                    darkGradientColors[0],
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 40.0, vertical: 10.0),
+              width: double.infinity,
+              height: double.infinity,
+              child: SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    SizedBox(height: 30.0),
+                    SizedBox(
+                      height: 110,
+                      width: 150,
+                      child: SvgPicture.asset(
+                        darkLogo,
                       ),
                     ),
-                    width: double.infinity,
-                    height: constraints.maxHeight,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: RadialGradient(
-                          center: Alignment.topLeft,
-                          radius: 1.2,
-                          colors: [
-                            darkGradientColors[0],
-                            Colors.transparent,
-                          ],
+                    Spacer(flex: 2),
+                    TextField(
+                      scrollPadding: EdgeInsets.all(10.0),
+                      controller: phoneController,
+                      style: TextStyle(
+                        color: Theme.of(context).focusColor,
+                      ),
+                      decoration: InputDecoration(
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        labelText: 'Эл.почта / телефон',
+                        hintText: '+7 777 777-77-77',
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).focusColor,
+                        ),
+                        hintStyle: TextStyle(
+                          color: Theme.of(context).disabledColor,
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).focusColor,
+                            width: 1.5,
+                          ),
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).disabledColor,
+                            width: 1.5,
+                          ),
                         ),
                       ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40.0, vertical: 10.0),
-                      width: double.infinity,
-                      height: constraints.maxHeight,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          SizedBox(height: 30.0),
-                          SizedBox(
-                            height: 110,
-                            width: 150,
-                            child: SvgPicture.asset(
-                              darkLogo,
-                            ),
+                    ),
+                    SizedBox(height: 10.0),
+                    TextField(
+                      scrollPadding: EdgeInsets.all(10.0),
+                      obscureText: true,
+                      controller: passwordController,
+                      style: TextStyle(
+                        color: Theme.of(context).focusColor,
+                      ),
+                      decoration: InputDecoration(
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        labelText: 'Пароль',
+                        hintText: 'Пароль',
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).focusColor,
+                        ),
+                        hintStyle: TextStyle(
+                          color: Theme.of(context).disabledColor,
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).focusColor,
+                            width: 1.5,
                           ),
-                          Spacer(flex: 2),
-                          TextField(
-                            scrollPadding: EdgeInsets.all(10.0),
-                            controller: phoneController,
-                            style: TextStyle(
-                              color: Theme.of(context).focusColor,
-                            ),
-                            decoration: InputDecoration(
-                              floatingLabelBehavior: FloatingLabelBehavior.auto,
-                              labelText: 'Эл.почта / телефон',
-                              hintText: '+7 777 777-77-77',
-                              labelStyle: TextStyle(
-                                color: Theme.of(context).focusColor,
-                              ),
-                              hintStyle: TextStyle(
-                                color: Theme.of(context).disabledColor,
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Theme.of(context).focusColor,
-                                  width: 1.5,
-                                ),
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Theme.of(context).disabledColor,
-                                  width: 1.5,
-                                ),
-                              ),
-                            ),
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).disabledColor,
+                            width: 1.5,
                           ),
-                          SizedBox(height: 10.0),
-                          TextField(
-                            scrollPadding: EdgeInsets.all(10.0),
-                            obscureText: true,
-                            controller: passwordController,
-                            style: TextStyle(
-                              color: Theme.of(context).focusColor,
-                            ),
-                            decoration: InputDecoration(
-                              floatingLabelBehavior: FloatingLabelBehavior.auto,
-                              labelText: 'Пароль',
-                              hintText: 'Пароль',
-                              labelStyle: TextStyle(
-                                color: Theme.of(context).focusColor,
-                              ),
-                              hintStyle: TextStyle(
-                                color: Theme.of(context).disabledColor,
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Theme.of(context).focusColor,
-                                  width: 1.5,
-                                ),
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Theme.of(context).disabledColor,
-                                  width: 1.5,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Spacer(),
-                          SizedBox(
-                            height: 40.0,
-                            child: (error != '')
-                                ? Container(
-                                    alignment: Alignment.bottomCenter,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10.0),
-                                    child: Text(
-                                      error,
-                                      style: TextStyle(
-                                          color: Theme.of(context).focusColor),
-                                    ),
-                                  )
-                                : SizedBox.shrink(),
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              primary: Theme.of(context).primaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                            ),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 55.0,
-                                vertical: 15.0,
-                              ),
+                        ),
+                      ),
+                    ),
+                    Spacer(),
+                    SizedBox(
+                      height: 40.0,
+                      child: (error != '')
+                          ? Container(
+                              alignment: Alignment.bottomCenter,
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
                               child: Text(
-                                'Войти',
-                                style: Theme.of(context).textTheme.button,
+                                error,
+                                style: TextStyle(
+                                    color: Theme.of(context).focusColor),
                               ),
-                            ),
-                            onPressed: () async {
-                              print('loading: $loading');
-                              if (phoneController.text != '' &&
-                                  passwordController.text != '' &&
-                                  !loading) {
-                                error = '';
-                                loading = true;
-                                showLoading(context);
-                                VKClient.cookieJar.deleteAll();
-                                bool done = await VKClient.login(
-                                    phoneController.text,
-                                    passwordController.text);
-                                loading = false;
-                                Navigator.pop(context);
-                                if (done) {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    NextPageRoute(nextPage: HomeView()),
-                                  );
-                                } else {
-                                  setState(() {
-                                    error = 'Не удалось войти!';
-                                    loading = false;
-                                  });
-                                }
-                              } else {
-                                setState(() {
-                                  error = 'Заполните все поля!';
-                                  loading = false;
-                                });
-                              }
-                            },
+                            )
+                          : SizedBox.shrink(),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Theme.of(context).primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 55.0,
+                          vertical: 15.0,
+                        ),
+                        child: Text(
+                          'Войти',
+                          style: Theme.of(context).textTheme.button,
+                        ),
+                      ),
+                      onPressed: () async {
+                        print('loading: $loading');
+                        if (phoneController.text != '' &&
+                            passwordController.text != '' &&
+                            !loading) {
+                          error = '';
+                          loading = true;
+                          showLoading(context);
+                          VKClient.cookieJar.deleteAll();
+                          bool done = await VKClient.login(
+                              phoneController.text, passwordController.text);
+                          loading = false;
+                          Navigator.pop(context);
+                          if (done) {
+                            Navigator.pushReplacement(
+                              context,
+                              NextPageRoute(nextPage: HomeView()),
+                            );
+                          } else {
+                            setState(() {
+                              error = 'Не удалось войти!';
+                              loading = false;
+                            });
+                          }
+                        } else {
+                          setState(() {
+                            error = 'Заполните все поля!';
+                            loading = false;
+                          });
+                        }
+                      },
+                    ),
+                    Spacer(flex: 2),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(NextPageRoute(nextPage: RulesView()));
+                      },
+                      child: Row(
+                        children: [
+                          Text(
+                            'Правила',
+                            style: Theme.of(context).textTheme.subtitle1,
                           ),
-                          Spacer(flex: 2),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .push(NextPageRoute(nextPage: RulesView()));
-                            },
-                            child: Row(
-                              children: [
-                                Text(
-                                  'Правила',
-                                  style: Theme.of(context).textTheme.subtitle1,
-                                ),
-                                SizedBox(width: 10.0),
-                                Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .subtitle1
-                                      .color,
-                                  size: 14,
-                                ),
-                              ],
-                            ),
+                          SizedBox(width: 10.0),
+                          Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            color: Theme.of(context).textTheme.subtitle1.color,
+                            size: 14,
                           ),
-                          Spacer(),
                         ],
                       ),
                     ),
-                  ),
+                    Spacer(),
+                  ],
                 ),
-              );
-            },
+              ),
+            ),
           ),
         ),
       ),
