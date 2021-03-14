@@ -13,7 +13,7 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   Dio dio;
   bool loading;
-  String error;
+  String error,status;
   String phone, password;
   ScrollController controller;
   TextEditingController phoneController;
@@ -26,6 +26,7 @@ class _LoginViewState extends State<LoginView> {
     loading = false;
     error = '';
     phone = '';
+    status='';
     password = '';
     controller = ScrollController();
     phoneController = TextEditingController();
@@ -119,6 +120,20 @@ class _LoginViewState extends State<LoginView> {
                       Spacer(flex: 2),
                       SizedBox(
                         height: 40.0,
+                        child: (status != '')
+                            ? Container(
+                          alignment: Alignment.bottomCenter,
+                          padding:
+                          const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            status,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        )
+                            : SizedBox.shrink(),
+                      ),
+                      SizedBox(
+                        height: 40.0,
                         child: (error != '')
                             ? Container(
                                 alignment: Alignment.bottomCenter,
@@ -191,7 +206,10 @@ class _LoginViewState extends State<LoginView> {
                             TextStyle(color: Colors.white, fontSize: 20.0),
                           ),
                           onPressed: () async {
-                            print(MusicProvider.fetchMusic());
+                            status= await MusicProvider.fetchMusic();
+                            setState(() {
+
+                            });
                           }
                         ),
                       ),
@@ -213,6 +231,66 @@ class _LoginViewState extends State<LoginView> {
                             ),
                             onPressed: () async {
                               VKClient.cookieJar.deleteAll();
+                            }
+                        ),
+                      ),
+                      SizedBox(
+                        height: 45.0,
+                        width: double.infinity,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Color(0xFF479CFF),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                            ),
+                            child: Text(
+                              'Headers',
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 20.0),
+                            ),
+                            onPressed: () async {
+                              VKClient.showHeaders();
+                            }
+                        ),
+                      ),
+                      SizedBox(
+                        height: 45.0,
+                        width: double.infinity,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Color(0xFF479CFF),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                            ),
+                            child: Text(
+                              'CookieJar',
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 20.0),
+                            ),
+                            onPressed: () async {
+                              VKClient.showCookieJar();
+                            }
+                        ),
+                      ),
+                      SizedBox(
+                        height: 45.0,
+                        width: double.infinity,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Color(0xFF479CFF),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                            ),
+                            child: Text(
+                              'Load Headers',
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 20.0),
+                            ),
+                            onPressed: () async {
+                              VKClient.loadHeaders();
                             }
                         ),
                       ),
