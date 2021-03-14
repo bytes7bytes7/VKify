@@ -4,4 +4,4 @@ Flutter приложение для прослушивания музыки с �
 
 # Screenshots
 
-<img src="screenshots/auth2.png" height="520px">
+<img src="screenshots/auth2.jpg" height="520px">
