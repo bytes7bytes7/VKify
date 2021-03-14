@@ -13,6 +13,12 @@ class VKClient {
   static String username;
   static String avatarUrl;
 
+  static Future<void> fetchUserData()async{
+    await initCookie();
+    Response response = await dio.get('https://vk.com/id$userID');
+
+  }
+
   static Future<void> initCookie() async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;
@@ -60,11 +66,8 @@ class VKClient {
           value = value.substring(0, value.indexOf(';'));
           if (key == 'remixuas' || key == 'remixtmr_login')
             continue;
-          else if (key == 'remixsid') {
-            print('DHEHDEH');
+          else if (key == 'remixsid')
             value = key + '==DELETED';
-          }
-          print(key + ' : ' + value);
           cookies += value + '; ';
         }
         cookies = cookies.substring(0, cookies.length - 2);

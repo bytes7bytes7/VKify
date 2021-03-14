@@ -16,6 +16,8 @@ class StartView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     checkLoggedIn(context);
-    return Scaffold();
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+    );
   }
 }

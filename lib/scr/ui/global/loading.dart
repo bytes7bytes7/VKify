@@ -9,18 +9,14 @@ Future<void> showLoading(BuildContext context) async {
         height: 80.0,
         width: 80.0,
         alignment: Alignment.center,
-        child: Container(
-          height: 70.0,
-          width: 70.0,
-          decoration: BoxDecoration(
-            color: Theme.of(context).backgroundColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(15.0),
-            height: 50.0,
-            width: 50.0,
-            child: CircularProgressIndicator(),
+        child: SizedBox(
+          height: 60.0,
+          width: 60.0,
+          child: CircularProgressIndicator(
+            strokeWidth: 3.0,
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).focusColor,
+            ),
           ),
         ),
       );

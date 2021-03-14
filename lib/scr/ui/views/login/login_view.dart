@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_vkify/scr/app/services/auth_service.dart';
 import 'package:flutter_vkify/scr/ui/global/app_colors.dart';
 import '../home/home_view.dart';
 import 'package:flutter_vkify/scr/ui/global/loading.dart';
 import 'package:flutter_vkify/scr/ui/global/constants.dart';
+import '../rules/rules_view.dart';
+import 'package:flutter_vkify/scr/ui/global/next_page_route.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -99,7 +100,7 @@ class _LoginViewState extends State<LoginView> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Spacer(flex: 2),
+                          SizedBox(height: 30.0),
                           SizedBox(
                             height: 110,
                             width: 150,
@@ -107,7 +108,7 @@ class _LoginViewState extends State<LoginView> {
                               darkLogo,
                             ),
                           ),
-                          Spacer(),
+                          Spacer(flex: 2),
                           TextField(
                             scrollPadding: EdgeInsets.all(10.0),
                             controller: phoneController,
@@ -127,11 +128,13 @@ class _LoginViewState extends State<LoginView> {
                               focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Theme.of(context).focusColor,
+                                  width: 1.5,
                                 ),
                               ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Theme.of(context).disabledColor,
+                                  width: 1.5,
                                 ),
                               ),
                             ),
@@ -157,11 +160,13 @@ class _LoginViewState extends State<LoginView> {
                               focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Theme.of(context).focusColor,
+                                  width: 1.5,
                                 ),
                               ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Theme.of(context).disabledColor,
+                                  width: 1.5,
                                 ),
                               ),
                             ),
@@ -201,20 +206,22 @@ class _LoginViewState extends State<LoginView> {
                             ),
                             onPressed: () async {
                               print('loading: $loading');
-                              if (phoneController.text != '' && passwordController.text != '' && !loading) {
+                              if (phoneController.text != '' &&
+                                  passwordController.text != '' &&
+                                  !loading) {
                                 error = '';
                                 loading = true;
                                 showLoading(context);
                                 VKClient.cookieJar.deleteAll();
-                                bool done = await VKClient.login(phoneController.text, passwordController.text);
+                                bool done = await VKClient.login(
+                                    phoneController.text,
+                                    passwordController.text);
                                 loading = false;
                                 Navigator.pop(context);
                                 if (done) {
                                   Navigator.pushReplacement(
                                     context,
-                                    MaterialPageRoute(
-                                      builder: (context) => HomeView(),
-                                    ),
+                                    NextPageRoute(nextPage: HomeView()),
                                   );
                                 } else {
                                   setState(() {
@@ -230,7 +237,31 @@ class _LoginViewState extends State<LoginView> {
                               }
                             },
                           ),
-                          Spacer(flex: 3),
+                          Spacer(flex: 2),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .push(NextPageRoute(nextPage: RulesView()));
+                            },
+                            child: Row(
+                              children: [
+                                Text(
+                                  'Правила',
+                                  style: Theme.of(context).textTheme.subtitle1,
+                                ),
+                                SizedBox(width: 10.0),
+                                Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .color,
+                                  size: 14,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Spacer(),
                         ],
                       ),
                     ),
