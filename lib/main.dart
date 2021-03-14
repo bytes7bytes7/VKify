@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vkify/scr/ui/theme/light_theme.dart';
+import 'package:flutter_vkify/scr/ui/theme/dark_theme.dart';
 import 'package:flutter_vkify/scr/ui/views/start/start_view.dart';
 
 void main() {
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'VKify',
-      theme: lightThemeData,
+      theme: darkThemeData,
       home: StartView(),
     );
   }

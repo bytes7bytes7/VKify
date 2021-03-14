@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_vkify/scr/app/services/auth_service.dart';
 import 'package:flutter_vkify/scr/app/services/music_provider.dart';
 import 'package:flutter_vkify/scr/ui/views/login/login_view.dart';
 
@@ -11,7 +10,6 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
-    var dio = VKClient.dio;
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 10.0),

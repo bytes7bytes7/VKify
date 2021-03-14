@@ -77,7 +77,8 @@ class VKClient {
     print(dio.options.headers);
   }
 
-  static Future<Dio> login(String phone, String password) async {
+  static Future<bool> login(String phone, String password) async {
+    dio = Dio();
     await initCookie();
     cookieJar.deleteAll();
     dio.options.followRedirects = true;
@@ -238,9 +239,9 @@ class VKClient {
       start = "photo_50: '";
       VKClient.avatarUrl = loginData.substring(
           loginData.indexOf(start) + start.length, loginData.length);
-      return dio;
+      return true;
     }
     print('Login FAILED!');
-    return null;
+    return false;
   }
 }
