@@ -54,6 +54,49 @@ class HomeView extends StatelessWidget {
     );
   }
 
+  AppBar buildAppBar(BuildContext context) {
+    print(VKClient.me.id);
+    print(VKClient.me.profileImageUrl);
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      leading: IconButton(
+        padding: EdgeInsets.only(left: 40.0),
+        icon: Icon(Icons.sensor_door_outlined),
+        onPressed: () {
+          VKClient.cookieJar.deleteAll();
+          Navigator.pushReplacement(
+            context,
+            NextPageRoute(nextPage: LoginView()),
+          );
+        },
+      ),
+      actions: [
+        Container(
+          padding: const EdgeInsets.all(5),
+          margin: const EdgeInsets.only(right: 40.0),
+          width: 50,
+          height: 50,
+          child: Container(
+            alignment: Alignment.center,
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
+              image: DecorationImage(
+                image: VKClient.me.profileImageUrl != ''
+                    ? NetworkImage(VKClient.me.profileImageUrl)
+                    : AssetImage('assets/jpg/girl.jpg'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Padding buildBody(BuildContext context) {
     print('build body');
     return Padding(
@@ -120,7 +163,7 @@ class HomeView extends StatelessWidget {
                       print('AAAAAAAAAAAAAAAAAAAAAA');
                       print('has data');
                       print(snapshot.data);
-                      children =List.from(snapshot.data);
+                      children = List.from(snapshot.data);
                       break;
                     case ConnectionState.done:
                       print('done');
@@ -130,12 +173,15 @@ class HomeView extends StatelessWidget {
                 return ListView.builder(
                   shrinkWrap: true,
                   controller: listController,
-                  itemCount: children.length,
+                  itemCount: children.length + 1,
                   itemBuilder: (context, i) {
-                    return MusicTile(
-                      song: children[i],
-                      audioPlayer: audioPlayer,
-                    );
+                    if (i < children.length)
+                      return MusicTile(
+                        song: children[i],
+                        audioPlayer: audioPlayer,
+                      );
+                    else
+                      return SizedBox(height: 30.0);
                   },
                 );
               },
@@ -143,45 +189,6 @@ class HomeView extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  AppBar buildAppBar(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      leading: IconButton(
-        padding: EdgeInsets.only(left: 40.0),
-        icon: Icon(Icons.sensor_door_outlined),
-        onPressed: () {
-          VKClient.cookieJar.deleteAll();
-          Navigator.pushReplacement(
-            context,
-            NextPageRoute(nextPage: LoginView()),
-          );
-        },
-      ),
-      actions: [
-        Container(
-          padding: const EdgeInsets.all(5),
-          margin: const EdgeInsets.only(right: 40.0),
-          width: 50,
-          height: 50,
-          child: Container(
-            alignment: Alignment.center,
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15.0),
-              image: DecorationImage(
-                image: AssetImage('assets/jpg/girl.jpg'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

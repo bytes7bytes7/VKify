@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_vkify/scr/app/services/auth_service.dart';
+import 'package:flutter_vkify/scr/app/services/upload_user_data.dart';
 import 'package:flutter_vkify/scr/ui/global/app_colors.dart';
 import '../home/home_view.dart';
 import 'package:flutter_vkify/scr/ui/global/loading.dart';

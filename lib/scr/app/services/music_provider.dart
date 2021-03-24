@@ -32,7 +32,7 @@ class MusicProvider {
         }
 
         if (ids.length == 5 || ids.length == 6)
-          audioIDs.add(VKClient.userID.toString() +
+          audioIDs.add(VKClient.me.id.toString() +
               '_' +
               first +
               '_' +
@@ -45,7 +45,7 @@ class MusicProvider {
 
     Map<String, String> queryParams = {'section': 'all'};
 
-    String uri = 'https://vk.com/audios' + VKClient.userID.toString();
+    String uri = 'https://vk.com/audios' + VKClient.me.id.toString();
     print(uri);
 
     Response response = await VKClient.dio.get(
@@ -66,8 +66,7 @@ class MusicProvider {
 
       List<String> audioIDs = findSongId(html);
       String ids = audioIDs[0];
-      for (int i = 1; i < audioIDs.length; i++)
-        ids += ',' + audioIDs[i];
+      for (int i = 1; i < ((audioIDs.length >9) ? 10 : audioIDs.length); i++) ids += ',' + audioIDs[i];
 
       Map<String, String> map = {
         'al': '1',
@@ -82,8 +81,14 @@ class MusicProvider {
           queryParameters: queryParams, data: forms);
 
       List<List<String>> encodedUrls = [];
-      List<dynamic> jsonDecoded =
-      json.decode(response.data.toString().substring(4))['payload'][1][0];
+      List<dynamic> jsonDecoded;
+      try {
+        jsonDecoded=
+            json.decode(response.data.toString().substring(4))['payload'][1][0];
+      } catch (e) {
+        print(e);
+        return;
+      }
       jsonDecoded.forEach((e) {
         encodedUrls.add([e[4], e[3], e[2], e[5].toString(), e[14]]);
       });
@@ -100,7 +105,7 @@ class MusicProvider {
             filename = letters.join();
           }
         }
-        String m3u8Url = LinkDecoder(VKClient.userID).decode(e[2]);
+        String m3u8Url = LinkDecoder(VKClient.me.id).decode(e[2]);
         response = await VKClient.dio.get(m3u8Url);
         String data = response.data;
 
@@ -135,10 +140,10 @@ class MusicProvider {
           isLiked: false,
         ));
       }
-    print('return songs');
-    //return songs;
-    controller.add(songs);
-    return;
+      print('return songs');
+      //return songs;
+      controller.add(songs);
+      return;
     }
     print(response.data);
     print('music fetch error');

@@ -4,18 +4,18 @@ import 'dart:collection';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
+import 'package:flutter_vkify/scr/app/models/user_model.dart';
+import 'package:flutter_vkify/scr/app/services/upload_user_data.dart';
 import 'package:path_provider/path_provider.dart';
 
 class VKClient {
   static Dio dio = Dio();
   static PersistCookieJar cookieJar;
-  static int userID;
-  static String username;
-  static String avatarUrl;
+  static User me=User();
 
-  static Future<void> fetchUserData()async{
+  static Future<void> fetchUserData() async {
     await initCookie();
-    await dio.get('https://vk.com/id$userID');
+    await dio.get('https://vk.com/id${me.id}');
   }
 
   static Future<void> initCookie() async {
@@ -23,6 +23,11 @@ class VKClient {
     String appDocPath = appDocDir.path;
     cookieJar = PersistCookieJar(dir: appDocPath + "/.cookies/");
     dio.interceptors.add(CookieManager(cookieJar));
+    Map<String, String> dict = await readFile();
+    print('dict: '+dict.toString());
+    if (dict.length > 0) {
+      me.fromMap(dict);
+    }
   }
 
   static Future<void> checkCookie() async {
@@ -38,7 +43,7 @@ class VKClient {
       }
       uid = uid.substring(uid.indexOf('l=') + 2);
       uid = uid.substring(0, uid.indexOf(';'));
-      VKClient.userID = int.parse(uid);
+      me.id = int.parse(uid);
 
       //Load header to dio client
       Map<String, String> headers = HashMap();
@@ -66,8 +71,7 @@ class VKClient {
           value = value.substring(0, value.indexOf(';'));
           if (key == 'remixuas' || key == 'remixtmr_login')
             continue;
-          else if (key == 'remixsid')
-            value = key + '==DELETED';
+          else if (key == 'remixsid') value = key + '==DELETED';
           cookies += value + '; ';
         }
         cookies = cookies.substring(0, cookies.length - 2);
@@ -226,22 +230,45 @@ class VKClient {
 
     if (success) {
       print('Login DONE!');
-      String start = 'parent.onLoginDone(';
-      loginData = loginData.substring(loginData.indexOf(start) + start.length);
-      loginData = loginData.substring(0, loginData.indexOf("'});"));
-      start = "'/id";
-      VKClient.userID = int.parse(loginData.substring(
-          loginData.indexOf(start) + start.length, loginData.indexOf("',")));
+      String start;
+      try {
+        print(loginData);
+        start = "photo_50: '";
+        me.profileImageUrl = loginData.substring(loginData.indexOf(start) + start.length);
+        me.profileImageUrl=me.profileImageUrl.substring(0,me.profileImageUrl.indexOf("'"));
+        start = '"uid":"';
+        String uid =
+            loginData.substring(loginData.indexOf(start) + start.length);
+        uid = uid.substring(0, uid.indexOf('",'));
+        me.id = int.parse(uid);
+
+        start = 'parent.onLoginDone(';
+        loginData =
+            loginData.substring(loginData.indexOf(start) + start.length);
+        loginData = loginData.substring(0, loginData.indexOf("'});"));
+        start = "'/";
+        me.shortName = loginData.substring(
+            loginData.indexOf(start) + start.length, loginData.indexOf("',"));
+      } catch (e) {
+        print(e);
+        return false;
+      }
       start = "',";
       loginData = loginData.substring(loginData.indexOf(start) + start.length);
       start = "name: '";
-      VKClient.username = loginData.substring(
+      me.name = loginData.substring(
           loginData.indexOf(start) + start.length, loginData.indexOf("',"));
       start = "',";
       loginData = loginData.substring(loginData.indexOf(start) + start.length);
-      start = "photo_50: '";
-      VKClient.avatarUrl = loginData.substring(
-          loginData.indexOf(start) + start.length, loginData.length);
+      
+      Map<String, String> m = {
+        'id': me.id.toString(),
+        'shortName': me.shortName,
+        'name': me.name,
+        'profileImageUrl': me.profileImageUrl,
+        'phoneOrEmail': phone,
+      };
+      await writeStringFile(toString(m));
       return true;
     }
     print('Login FAILED!');
