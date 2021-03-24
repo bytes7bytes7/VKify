@@ -7,8 +7,10 @@ class StartView extends StatelessWidget {
 
   Future<void> checkLoggedIn(BuildContext context)async{
     await VKClient.checkCookie();
-    if(VKClient.userID==null)
+    if(VKClient.userID==null){
+      print('no user id');
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> LoginView()));
+    }
     else
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomeView()));
   }

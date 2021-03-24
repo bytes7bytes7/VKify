@@ -15,8 +15,7 @@ class VKClient {
 
   static Future<void> fetchUserData()async{
     await initCookie();
-    Response response = await dio.get('https://vk.com/id$userID');
-
+    await dio.get('https://vk.com/id$userID');
   }
 
   static Future<void> initCookie() async {
@@ -29,6 +28,7 @@ class VKClient {
   static Future<void> checkCookie() async {
     await initCookie();
     if (cookieJar.domains.isNotEmpty) {
+      print('cookieJar domains is NOT empty');
       // Set userID
       String uid;
       try {

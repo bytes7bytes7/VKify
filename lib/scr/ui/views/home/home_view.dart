@@ -1,31 +1,35 @@
 import 'dart:ui';
+import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_vkify/scr/app/models/song_model.dart';
 import 'package:flutter_vkify/scr/app/services/auth_service.dart';
-import 'package:flutter_vkify/scr/ui/widgets/search_bar.dart';
 import 'package:flutter_vkify/scr/app/services/music_provider.dart';
+import 'package:flutter_vkify/scr/ui/widgets/music_tile.dart';
+import 'package:flutter_vkify/scr/ui/widgets/search_bar.dart';
 import 'package:flutter_vkify/scr/ui/views/login/login_view.dart';
 import 'package:flutter_vkify/scr/ui/global/next_page_route.dart';
-import 'package:flutter_vkify/scr/ui/global/loading.dart';
 
-class HomeView extends StatefulWidget {
-  @override
-  _HomeViewState createState() => _HomeViewState();
-}
+class HomeView extends StatelessWidget {
+  final double _sigmaX = 25;
+  final double _sigmaY = 25;
+  final double _opacity = 0.05;
+  final TextEditingController searchController = TextEditingController();
+  final StreamController<List<Song>> streamController =
+      StreamController<List<Song>>();
+  final ScrollController listController = ScrollController();
+  final AudioPlayer audioPlayer = AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
+  List<Song> children = [];
 
-class _HomeViewState extends State<HomeView> {
-  double _sigmaX = 25;
-  double _sigmaY = 25;
-  double _opacity = 0.05;
-  TextEditingController searchController;
-
-  @override
-  void initState() {
-    searchController = TextEditingController();
-    super.initState();
+  Future<void> initMusic() async {
+    print('add to stream');
+    MusicProvider.fetchMusic(controller: streamController);
   }
 
   @override
   Widget build(BuildContext context) {
+    initMusic();
+    print('build home');
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -50,6 +54,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Padding buildBody(BuildContext context) {
+    print('build body');
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: Column(
@@ -59,14 +64,14 @@ class _HomeViewState extends State<HomeView> {
           RichText(
             text: TextSpan(
               text: 'Любимые ',
-              style: Theme.of(context).textTheme.headline1,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline1
+                  .copyWith(fontWeight: FontWeight.normal),
               children: <TextSpan>[
                 TextSpan(
                   text: 'Треки',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline1
-                      .copyWith(fontWeight: FontWeight.normal),
+                  style: Theme.of(context).textTheme.headline1,
                 ),
               ],
             ),
@@ -74,34 +79,87 @@ class _HomeViewState extends State<HomeView> {
           SizedBox(height: 20.0),
           SearchBar(searchController: searchController),
           SizedBox(height: 30.0),
-          Text(
-            'Популярные Плейлисты',
-            style: Theme.of(context).textTheme.headline2,
+          Row(
+            children: [
+              Text(
+                'Моя Музыка',
+                style: Theme.of(context).textTheme.headline2,
+              ),
+              Spacer(),
+              IconButton(
+                icon: Icon(
+                  Icons.refresh,
+                  color: Theme.of(context).focusColor,
+                ),
+                onPressed: () {
+                  initMusic();
+                },
+              ),
+            ],
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              primary: Theme.of(context).primaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
+          Expanded(
+            child: StreamBuilder<List<Song>>(
+              stream: streamController.stream,
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
+                if (snapshot.hasError) {
+                  print('loading error');
+                  return Center(
+                    child: Text('Ошибка загрузки'),
+                  );
+                }else{
+                  switch(snapshot.connectionState){
+                    case ConnectionState.none:
+                      return Icon(Icons.hourglass_empty);
+                      break;
+                    case ConnectionState.waiting:
+                      return CircularProgressIndicator();
+                      break;
+                    case ConnectionState.active:
+                      print('AAAAAAAAAAAAAAAAAAAAAA');
+                      print('has data');
+                      print(snapshot.data);
+                      children =List.from(snapshot.data);
+                      break;
+                    case ConnectionState.done:
+                      print('AAAAAAAAAAAAAAAAAAAAAA');
+                      print('has data');
+                      print(snapshot.data);
+                      children =List.from(snapshot.data);
+                      break;
+                  }
+                }
+                print('render music list view');
+                return ListView.builder(
+                  shrinkWrap: true,
+                  controller: listController,
+                  itemCount: children.length,
+                  itemBuilder: (context, i) {
+                    return MusicTile(song: children[i], audioPlayer: audioPlayer);
+                  },
+                );
+                // else {
+                //   print('loading......');
+                //   return Center(
+                //     child: Container(
+                //       height: 80.0,
+                //       width: 80.0,
+                //       alignment: Alignment.center,
+                //       child: SizedBox(
+                //         height: 60.0,
+                //         width: 60.0,
+                //         child: CircularProgressIndicator(
+                //           strokeWidth: 3.0,
+                //           valueColor: AlwaysStoppedAnimation<Color>(
+                //             Theme.of(context).focusColor,
+                //           ),
+                //         ),
+                //       ),
+                //     ),
+                //   );
+                // }
+              },
             ),
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 55.0,
-                vertical: 15.0,
-              ),
-              child: Text(
-                'Выйти',
-                style: Theme.of(context).textTheme.button,
-              ),
-            ),
-            onPressed: () async {
-              VKClient.cookieJar.deleteAll();
-              Navigator.pushReplacement(
-                context,
-                NextPageRoute(nextPage: LoginView()),
-              );
-            },
           ),
         ],
       ),
@@ -112,21 +170,34 @@ class _HomeViewState extends State<HomeView> {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      leading: Icon(
-        Icons.menu,
-        color: Theme.of(context).focusColor,
+      leading: IconButton(
+        padding: EdgeInsets.only(left: 40.0),
+        icon: Icon(Icons.sensor_door_outlined),
+        onPressed: () {
+          VKClient.cookieJar.deleteAll();
+          Navigator.pushReplacement(
+            context,
+            NextPageRoute(nextPage: LoginView()),
+          );
+        },
       ),
       actions: [
         Container(
-          margin: const EdgeInsets.symmetric(horizontal: 10.0),
-          alignment: Alignment.center,
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            image: DecorationImage(
-              image: AssetImage('assets/jpg/girl.jpg'),
-              fit: BoxFit.cover,
+          padding: const EdgeInsets.all(5),
+          margin: const EdgeInsets.only(right: 40.0),
+          width: 50,
+          height: 50,
+          child: Container(
+            alignment: Alignment.center,
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
+              image: DecorationImage(
+                image: AssetImage('assets/jpg/girl.jpg'),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
