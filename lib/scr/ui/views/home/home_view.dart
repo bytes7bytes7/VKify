@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vkify/scr/app/models/song_model.dart';
 import 'package:flutter_vkify/scr/app/services/auth_service.dart';
 import 'package:flutter_vkify/scr/app/services/music_provider.dart';
+import 'package:flutter_vkify/scr/ui/global/loading.dart';
 import 'package:flutter_vkify/scr/ui/widgets/music_tile.dart';
 import 'package:flutter_vkify/scr/ui/widgets/search_bar.dart';
 import 'package:flutter_vkify/scr/ui/views/login/login_view.dart';
@@ -107,13 +108,13 @@ class HomeView extends StatelessWidget {
                   return Center(
                     child: Text('Ошибка загрузки'),
                   );
-                }else{
-                  switch(snapshot.connectionState){
+                } else {
+                  switch (snapshot.connectionState) {
                     case ConnectionState.none:
                       return Icon(Icons.hourglass_empty);
                       break;
                     case ConnectionState.waiting:
-                      return CircularProgressIndicator();
+                      return Loading();
                       break;
                     case ConnectionState.active:
                       print('AAAAAAAAAAAAAAAAAAAAAA');
@@ -122,42 +123,21 @@ class HomeView extends StatelessWidget {
                       children =List.from(snapshot.data);
                       break;
                     case ConnectionState.done:
-                      print('AAAAAAAAAAAAAAAAAAAAAA');
-                      print('has data');
-                      print(snapshot.data);
-                      children =List.from(snapshot.data);
+                      print('done');
                       break;
                   }
                 }
-                print('render music list view');
                 return ListView.builder(
                   shrinkWrap: true,
                   controller: listController,
                   itemCount: children.length,
                   itemBuilder: (context, i) {
-                    return MusicTile(song: children[i], audioPlayer: audioPlayer);
+                    return MusicTile(
+                      song: children[i],
+                      audioPlayer: audioPlayer,
+                    );
                   },
                 );
-                // else {
-                //   print('loading......');
-                //   return Center(
-                //     child: Container(
-                //       height: 80.0,
-                //       width: 80.0,
-                //       alignment: Alignment.center,
-                //       child: SizedBox(
-                //         height: 60.0,
-                //         width: 60.0,
-                //         child: CircularProgressIndicator(
-                //           strokeWidth: 3.0,
-                //           valueColor: AlwaysStoppedAnimation<Color>(
-                //             Theme.of(context).focusColor,
-                //           ),
-                //         ),
-                //       ),
-                //     ),
-                //   );
-                // }
               },
             ),
           ),

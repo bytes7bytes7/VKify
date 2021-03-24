@@ -66,7 +66,7 @@ class MusicProvider {
 
       List<String> audioIDs = findSongId(html);
       String ids = audioIDs[0];
-      for (int i = 1; i < 5; i++)
+      for (int i = 1; i < audioIDs.length; i++)
         ids += ',' + audioIDs[i];
 
       Map<String, String> map = {
@@ -114,7 +114,7 @@ class MusicProvider {
         musicLink = musicLink.substring(0, musicLink.lastIndexOf('/'));
         musicLink += urlPart;
 
-        print(filename);
+        print('filename: $filename');
         // print(musicLink);
         // print('');
 
@@ -138,6 +138,7 @@ class MusicProvider {
     print('return songs');
     //return songs;
     controller.add(songs);
+    return;
     }
     print(response.data);
     print('music fetch error');
